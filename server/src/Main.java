@@ -2,58 +2,58 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        // 標準入力
-        Scanner sc = new Scanner(System.in);
-        // 入力値を全て格納するlist
-        List<String> inputList = new ArrayList<String>();
-        
-        // 入力値を取得し、1行ずつlistに格納
-        while (sc.hasNextLine()) {
-            String str = sc.nextLine();
-            
-            if(!str.equals("")){
-                inputList.add(str);
-            }
-            // 空行が入力されたら格納処理終了
-            if(str.equals("")){
-                break;
-            }
-        }
-
-        // メイン処理実行
-        bingoCheck(inputList);
-    }
-
-    // メイン処理
-    private static void bingoCheck(List<String> inputList){
         try{
-            // ビンゴカード作成
+            // 標準入力
+            Scanner sc = new Scanner(System.in);
             // カードサイズ
-            int cardSize = Integer.parseInt(inputList.get(0));
+            int cardSize = Integer.parseInt(sc.nextLine());
             // ビンゴカード用の配列
             String[][] bingoCard = new String[cardSize][cardSize];
 
             // 1行分の単語をスペース区切りでビンゴカードにセット
-            for (int i = 0; i < cardSize; i++){
-                String str = inputList.get(i + 1);
+            for(int i = 0; i < cardSize; i++){
+                String str = sc.nextLine();
+                
+                // 入力値の数が誤っていたら処理終了
+                if((str.split(" ")).length != cardSize){
+                    break;
+                }
+                // 空行が入力されたら処理終了
+                if(str.equals("")){
+                    break;
+                }
                 bingoCard[i] = str.split(" ");
             }
 
             // 単語リスト作成
             // 単語リストサイズ
-            int wordSize = Integer.parseInt(inputList.get(cardSize + 1));
+            int wordSize = Integer.parseInt(sc.nextLine());
             // 入力された単語を格納するlist
             List<String> wordList = new ArrayList<String>();
-            // 入力単語の開始位置
-            int start = cardSize + 2;
-            // 入力単語の終了位置
-            int end = start + wordSize;
 
             // 入力された単語をlistに追加
-            for (int i = start; i < end; i++) {
-                wordList.add(inputList.get(i));
+            for(int i = 0; i < wordSize; i++){
+                String str = sc.nextLine();
+                
+                // 空行が入力されたら格納処理終了
+                if(str.equals("")){
+                    break;
+                }
+                wordList.add(str);
             }
-            
+            // メイン処理実行
+            bingoCheck(cardSize, bingoCard, wordList);
+
+        } catch(Exception e) {
+            // Exceptionが発生した場合は、noと出力し処理を終了する
+            System.out.println("no");
+            return;
+        }
+    }
+
+    // メイン処理
+    private static void bingoCheck(int cardSize, String[][] bingoCard, List<String> wordList){
+        try{           
             // ビンゴ判定処理
             // ビンゴ数
             int bingoCnt = 0;
