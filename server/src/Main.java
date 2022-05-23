@@ -10,19 +10,20 @@ public class Main {
             // ビンゴカード用の配列
             String[][] bingoCard = new String[cardSize][cardSize];
 
-            // 1行分の単語をスペース区切りでビンゴカードにセット
+            // ビンゴカード作成
             for(int i = 0; i < cardSize; i++){
-                String str = sc.nextLine();
-                
-                // 入力値の数が誤っていたら処理終了
-                if((str.split(" ")).length != cardSize){
-                    break;
+                // 1行分の単語をスペース区切りでビンゴカードにセット
+                String[] str = (sc.nextLine()).split("\\s+");
+
+                // 入力サイズがカードサイズと不一致の場合、処理終了
+                if(str.length != cardSize){
+                    System.out.println("no");
+                    return;
+                } else {
+                    for(int j = 0; j < cardSize; j++){
+                        bingoCard[i][j] = str[j];
+                    }
                 }
-                // 空行が入力されたら処理終了
-                if(str.equals("")){
-                    break;
-                }
-                bingoCard[i] = str.split(" ");
             }
 
             // 単語リスト作成
@@ -33,35 +34,39 @@ public class Main {
 
             // 入力された単語をlistに追加
             for(int i = 0; i < wordSize; i++){
-                String str = sc.nextLine();
+                String word = sc.nextLine();
                 
-                // 空行が入力されたら格納処理終了
-                if(str.equals("")){
-                    break;
+                // 空が入力されたら処理終了
+                if(word.isEmpty()){
+                    System.out.println("no");
+                    return;
+                } else {
+                    wordList.add(word);
                 }
-                wordList.add(str);
             }
-            // メイン処理実行
-            bingoCheck(cardSize, bingoCard, wordList);
+
+            // ビンゴ判定処理実行
+            int bingoCnt = bingoCheck(cardSize, bingoCard, wordList);
+
+            // 結果出力。勝利条件を満たすかどうか（bingoCnt > 0）
+            System.out.println(bingoCnt > 0 ? "yes" : "no");
 
         } catch(Exception e) {
-            // Exceptionが発生した場合は、noと出力し処理を終了する
+            // 例外が発生した場合は、noと出力し処理を終了する
             System.out.println("no");
             return;
         }
     }
 
-    // メイン処理
-    private static void bingoCheck(int cardSize, String[][] bingoCard, List<String> wordList){
+    // ビンゴ判定処理
+    private static int bingoCheck(int cardSize, String[][] bingoCard, List<String> wordList){
         try{           
-            // ビンゴ判定処理
             // ビンゴ数
             int bingoCnt = 0;
+
             // 単語チェック用配列
             int[][] checked = new int[cardSize][cardSize];
-
-            // 選ばれた単語がビンゴカードの中にあった場合、
-            // その単語を1と印をつける
+            // 選ばれた単語がビンゴカードの中にあった場合、その単語を1と印をつける
             for(int i = 0; i < bingoCard.length; i++){
                 for(String word : wordList){
                     int num = Arrays.asList(bingoCard[i]).indexOf(word);
@@ -83,7 +88,6 @@ public class Main {
             // 縦列判定
             // 縦列用配列
             int[][] columns = new int[cardSize][cardSize];
-
             // 単語チェック用配列から縦列のみの配列を作成
             for(int i = 0; i < cardSize; i++){
                 for(int j = 0; j < cardSize; j++){
@@ -102,7 +106,6 @@ public class Main {
             int rightCnt = 0;
             // 左斜めのカウント
             int leftCnt = 0;
-
             // 縦横のindexが一致する場所(右斜め)または、縦横のカードサイズ - 1(左斜め)が全て1だったらビンゴカウント
             for(int i = 0; i < cardSize; i++){
                 // 1マスずつ確認
@@ -117,14 +120,12 @@ public class Main {
                 bingoCnt++;
             }
 
-            // 結果出力
-            // 勝利条件を満たすかどうか（bingoCnt > 0）
-            System.out.println(bingoCnt > 0 ? "yes" : "no");
+            // ビンゴカウントを返す
+            return bingoCnt;
 
         } catch(Exception e) {
-            // Exceptionが発生した場合は、noと出力し処理を終了する
-            System.out.println("no");
-            return;
+            // 例外が発生した場合は、-1を返す
+            return -1;
         }
     }
 }
