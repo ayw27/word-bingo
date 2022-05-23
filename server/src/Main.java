@@ -9,16 +9,17 @@ public class Main {
             int cardSize = Integer.parseInt(sc.nextLine());
             // ビンゴカード用の配列
             String[][] bingoCard = new String[cardSize][cardSize];
+            // 入力内容のエラー数
+            int errorCnt = 0;
 
             // ビンゴカード作成
             for(int i = 0; i < cardSize; i++){
                 // 1行分の単語をスペース区切りでビンゴカードにセット
                 String[] str = (sc.nextLine()).split("\\s+");
 
-                // 入力サイズがカードサイズと不一致の場合、処理終了
+                // 入力サイズがカードサイズと不一致の場合エラーカウント
                 if(str.length != cardSize){
-                    System.out.println("no");
-                    return;
+                    errorCnt++;
                 } else {
                     for(int j = 0; j < cardSize; j++){
                         bingoCard[i][j] = str[j];
@@ -35,14 +36,19 @@ public class Main {
             // 入力された単語をlistに追加
             for(int i = 0; i < wordSize; i++){
                 String word = sc.nextLine();
-                
-                // 空が入力されたら処理終了
+
+                // 空が入力されたらエラーカウント
                 if(word.isEmpty()){
-                    System.out.println("no");
-                    return;
+                    errorCnt++;
                 } else {
                     wordList.add(word);
                 }
+            }
+
+            // 入力内容にエラーがある場合、処理を終了する
+            if(errorCnt > 0){
+                System.out.println("no");
+                return;
             }
 
             // ビンゴ判定処理実行
@@ -71,7 +77,7 @@ public class Main {
                 for(String word : wordList){
                     int num = Arrays.asList(bingoCard[i]).indexOf(word);
 
-                    if(num > -1) {
+                    if(num != -1) {
                         checked[i][num] = 1;
                     }
                 }
